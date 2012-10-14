@@ -53,6 +53,14 @@ module ActiveSupport
       rescue Memcached::Error => e
         log_error(e)
         nil
+      rescue TypeError, ArgumentError => e
+        if e =~ /format/
+          log_error(e)
+          delete(key)
+          return nil
+        else
+          raise e
+        end
       end
 
       def read_multi(*keys)
