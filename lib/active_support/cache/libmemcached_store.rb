@@ -54,13 +54,10 @@ module ActiveSupport
         log_error(e)
         nil
       rescue TypeError, ArgumentError => e
-        if e.message =~ /marshal|dump/
-          log_error(e)
-          delete(key)
-          return nil
-        else
-          raise e
-        end
+        raise e unless e.message =~ /marshal|dump/
+        log_error(e)
+        delete(key)
+        nil
       end
 
       def read_multi(*keys)

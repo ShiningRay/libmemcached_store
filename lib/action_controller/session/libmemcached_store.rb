@@ -29,6 +29,11 @@ begin
           rescue Memcached::Error => e
             log_error(e)
             session = {}
+          rescue TypeError, ArgumentError => e
+            raise e unless e.message =~ /marshal|dump/
+            log_error(e)
+            delete(key)
+            session = {}
           end
           [sid, session]
         end
