@@ -54,7 +54,7 @@ module ActiveSupport
         log_error(e)
         nil
       rescue TypeError, ArgumentError => e
-        if e =~ /marshal|dump/
+        if e.message =~ /marshal|dump/
           log_error(e)
           delete(key)
           return nil
