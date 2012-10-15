@@ -32,7 +32,7 @@ begin
           rescue TypeError, ArgumentError => e
             raise e unless e.message =~ /marshal|dump/
             log_error(e)
-            @pool.delete(key)
+            @pool.delete(sid)
             session = {}
           end
           [sid, session]
@@ -47,7 +47,7 @@ begin
           log_error(e)
           return false
         end
-        
+
         def destroy(env)
           if sid = current_session_id(env)
             @pool.delete(sid)
