@@ -32,7 +32,7 @@ begin
           rescue TypeError, ArgumentError => e
             raise e unless e.message =~ /marshal|dump/
             log_error(e)
-            delete(key)
+            @pool.delete(key)
             session = {}
           end
           [sid, session]
@@ -47,6 +47,14 @@ begin
           log_error(e)
           return false
         end
+        
+        def destroy(env)
+          if sid = current_session_id(env)
+            @pool.delete(sid)
+          end
+        rescue MemCache::MemCacheError, Errno::ECONNREFUSED
+          false
+        end        
 		  
         def log_error(exception)
           logger ||= RAILS_DEFAULT_LOGGER
