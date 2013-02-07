@@ -130,7 +130,7 @@ module ActiveSupport
       private
 
         def expires_in(options)
-          (options || {})[:expires_in] || 0
+          (options || {})[:expires_in].to_i || 0
         end
 
         def marshal?(options)
