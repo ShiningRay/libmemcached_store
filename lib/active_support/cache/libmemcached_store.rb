@@ -221,7 +221,8 @@ module ActiveSupport
 
       def deserialize(value, raw = false, flags = 0)
         value = Zlib::Inflate.inflate(value) if (flags & FLAG_COMPRESSED) != 0
-        raw ? value : Marshal.load(value)
+        value = raw ? value : Marshal.load(value)
+        value.is_a?(ActiveSupport::Cache::Entry) ? value.value : value
       rescue TypeError, ArgumentError
         value
       end
